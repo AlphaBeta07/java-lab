@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    <title>
-        JAVA Lab
-    </title>
+<head>
+    <title>JAVA Lab</title>
     <style>
-        .a{
+        .a {
             font-size: large;
             text-decoration: none;
             color: black;
         }
+        #downloadBtn {
+            margin-top: 30px;
+            padding: 10px 18px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #downloadBtn:hover {
+            background-color: #0056b3;
+        }
     </style>
+
+    <!-- ZIP creation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
+
 <body>
+
     <a href="CalendarDay.java" class="a">1. CalendarDay</a><br><br>
     <a href="MatrixOps.java" class="a">2. MatrixOps</a><br><br>
     <a href="Employee.java" class="a">3. Employee</a><br><br>
@@ -28,6 +45,53 @@
     <a href="Notepad.java" class="a">13. Notepad</a><br><br>
     <a href="RandomSquareCube.java" class="a">14. RandomSquareCube</a><br><br>
     <a href="CollectionGenericsDemo.java" class="a">15. CollectionGenericsDemo</a><br><br>
-    
+
+    <!-- DOWNLOAD BUTTON -->
+    <button id="downloadBtn" onclick="downloadAll()">Download All Code</button>
+
+    <script>
+        function downloadAll() {
+            const files = [
+                "CalendarDay.java",
+                "MatrixOps.java",
+                "Employee.java",
+                "SavingsAccount.java",
+                "Person.java",
+                "StackQueue.java",
+                "PackDemo.java",
+                "MathOperation.java",
+                "ReadFile.java",
+                "StudentInfo.java",
+                "SimpleCalculator.java",
+                "KeyMouseDemo.java",
+                "Notepad.java",
+                "RandomSquareCube.java",
+                "CollectionGenericsDemo.java"
+            ];
+
+            let zip = new JSZip();
+            let folder = zip.folder("JavaLabFiles");
+            let promises = [];
+
+            files.forEach(file => {
+                promises.push(
+                    fetch(file)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            return blob.text().then(text => {
+                                folder.file(file, text);
+                            });
+                        })
+                );
+            });
+
+            Promise.all(promises).then(() => {
+                zip.generateAsync({ type: "blob" }).then(content => {
+                    saveAs(content, "JavaLabFiles.zip");
+                });
+            });
+        }
+    </script>
+
 </body>
 </html>
